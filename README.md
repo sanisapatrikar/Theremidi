@@ -35,8 +35,7 @@ Theremidi/
 │       ├── base.stl                       # Enclosure lower chassis
 │       ├── lid.stl                        # Top faceplate with sensor cutouts
 │       └── connector.stl                  # Internal mounting brackets
-├── BOM.md                                 # Complete Bill of Materials & hardware specs
-├── README.md                              # Project documentation & DAW guide
+├── README.md                              # Project documentation, BOM & DAW guide
 └── LICENSE                                # MIT License
 ```
 
@@ -107,7 +106,7 @@ A standalone prototype requiring no computer:
 
 ## 📋 Bill of Materials (BOM)
 
-A complete procurement breakdown and 3D printing specs are documented in [**BOM.md**](BOM.md).
+This Bill of Materials outlines all 3D printed mechanicals, hardware fasteners, and electronic components required to build the Theremidi prototype.
 
 ### 1. 3D Printed Enclosure Parts
 Designed as an experimental desktop enclosure. STL files are available in [`hardware/3D Printable Files/`](hardware/3D%20Printable%20Files/):
@@ -135,6 +134,10 @@ Designed as an experimental desktop enclosure. STL files are available in [`hard
 | **Audio Amp & Speaker** *(Optional)* | PAM8403 3W amp + 4Ω 3W speaker | 1x | Mode 2: Optional portable sound |
 | **Cabling** | USB Data Cable (USB-C or Micro-USB) | 1x | Power and USB-MIDI data |
 | **Wiring** | Breadboard or prototyping perfboard + jumpers | 1x | Internal wiring and assembly |
+
+### 4. Assembly & Prototyping Notes
+- **Tools**: A 2.0mm / 2.5mm hex driver for M3 screws.
+- **Wiring**: For bench experimentation, a solderless breadboard and Dupont jumper wires are sufficient. For a sturdy, travel-friendly build inside the enclosure, perfboard soldering is recommended.
 
 ---
 
