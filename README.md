@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform: ESP32](https://img.shields.io/badge/Platform-ESP32%20%7C%20Arduino-red.svg)](https://www.espressif.com/)
 [![Protocol: USB--MIDI](https://img.shields.io/badge/Protocol-USB--MIDI%20Class--Compliant-green.svg)](https://www.midi.org/)
-[![Hardware: 3D Printable](https://img.shields.io/badge/Hardware-3D%20Printable%20Enclosure-orange.svg)](3D%20Printable%20Files/)
+[![Hardware: 3D Printable](https://img.shields.io/badge/Hardware-3D%20Printable%20Enclosure-orange.svg)](hardware/3D%20Printable%20Files/)
 
 > [!NOTE]
 > **Project Status: Open-Source DIY Prototype & Experimental Platform**  
@@ -14,6 +14,31 @@
 **Theremidi** explores the intersection between the expressive, physical gesture of acoustic performance and digital music production. Inspired by Léon Theremin’s legendary 1920 invention, Theremidi investigates replacing mechanical knobs and faders with **spatial gesture control**.
 
 By tracking hand proximity using ultrasonic sensing and an experimental smoothing algorithm, Theremidi offers an accessible DIY platform to experiment with organic, tactile-free parameter modulation in DAWs, software synths, or standalone audio experiments.
+
+---
+
+## 📂 Repository Structure
+
+```text
+Theremidi/
+├── firmware/
+│   ├── usb_midi_controller/
+│   │   └── usb_midi_controller.ino        # ESP32 Native USB-MIDI controller sketch
+│   ├── standalone_synth_esp32/
+│   │   └── standalone_synth_esp32.ino     # ESP32 DDS sine audio generator via DAC
+│   ├── standalone_sensor_arduino/
+│   │   └── standalone_sensor_arduino.ino  # Arduino Uno dual-sensor UART streamer
+│   └── arduino_sensor_simulation/
+│       └── arduino_sensor_simulation.ino  # Bench-testing / sensor simulation sketch
+├── hardware/
+│   └── 3D Printable Files/
+│       ├── base.stl                       # Enclosure lower chassis
+│       ├── lid.stl                        # Top faceplate with sensor cutouts
+│       └── connector.stl                  # Internal mounting brackets
+├── BOM.md                                 # Complete Bill of Materials & hardware specs
+├── README.md                              # Project documentation & DAW guide
+└── LICENSE                                # MIT License
+```
 
 ---
 
@@ -61,7 +86,7 @@ graph TD
 ```
 
 ### 1. 🎚️ Software Mode — Contactless USB-MIDI Controller
-*Firmware: [`software_version_w_smoothening_algo.ino`](software_version_w_smoothening_algo.ino)*
+*Firmware: [`firmware/usb_midi_controller/usb_midi_controller.ino`](firmware/usb_midi_controller/usb_midi_controller.ino)*
 
 The ESP32 registers as a native USB-MIDI Human Interface Device (HID). It translates physical proximity into MIDI Continuous Controller (CC) messages:
 - **CC 16**: Mapped to parameter 16 (e.g., Wavetable Position / Reverb Depth, 5 cm – 40 cm range).
@@ -71,7 +96,7 @@ The ESP32 registers as a native USB-MIDI Human Interface Device (HID). It transl
   This significantly reduces sensor chatter and produces smoother MIDI automation.
 
 ### 2. 🎻 Hardware Mode — Standalone Digital Instrument
-*Firmware: [`theremin_arduino_code.ino`](theremin_arduino_code.ino) + [`theremin_esp_code.ino`](theremin_esp_code.ino)*
+*Firmware: [`firmware/standalone_sensor_arduino/standalone_sensor_arduino.ino`](firmware/standalone_sensor_arduino/standalone_sensor_arduino.ino) + [`firmware/standalone_synth_esp32/standalone_synth_esp32.ino`](firmware/standalone_synth_esp32/standalone_synth_esp32.ino)*
 
 A standalone prototype requiring no computer:
 - **Dual-MCU Pipeline**: An Arduino Uno reads sensor pulses and streams coordinate packets over UART to an ESP32.
@@ -85,13 +110,13 @@ A standalone prototype requiring no computer:
 A complete procurement breakdown and 3D printing specs are documented in [**BOM.md**](BOM.md).
 
 ### 1. 3D Printed Enclosure Parts
-Designed as an experimental desktop enclosure. STL files are available in [`3D Printable Files/`](3D%20Printable%20Files/):
+Designed as an experimental desktop enclosure. STL files are available in [`hardware/3D Printable Files/`](hardware/3D%20Printable%20Files/):
 
 | File | Quantity | Description | Print Recommendations |
 | :--- | :---: | :--- | :--- |
-| [`base.stl`](3D%20Printable%20Files/base.stl) | **1x** | Main chassis housing microcontroller and wiring | PLA / PETG, 0.2mm layer, 20% infill |
-| [`lid.stl`](3D%20Printable%20Files/lid.stl) | **1x** | Top cover plate with dual ultrasonic sensor cutouts | PLA / PETG, 0.2mm layer, 20% infill |
-| [`connector.stl`](3D%20Printable%20Files/connector.stl) | **2x** | Internal structural mounting brackets | PLA / PETG, 0.2mm layer, 30% infill |
+| [`base.stl`](hardware/3D%20Printable%20Files/base.stl) | **1x** | Main chassis housing microcontroller and wiring | PLA / PETG, 0.2mm layer, 20% infill |
+| [`lid.stl`](hardware/3D%20Printable%20Files/lid.stl) | **1x** | Top cover plate with dual ultrasonic sensor cutouts | PLA / PETG, 0.2mm layer, 20% infill |
+| [`connector.stl`](hardware/3D%20Printable%20Files/connector.stl) | **2x** | Internal structural mounting brackets | PLA / PETG, 0.2mm layer, 30% infill |
 
 ### 2. Fasteners & Mechanical Hardware
 | Item | Spec | Quantity | Usage |

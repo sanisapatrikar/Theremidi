@@ -9,13 +9,13 @@ This document provides the hardware parts list, component specifications, 3D pri
 
 ## 1. 3D Printable Mechanical Parts
 
-Files located in [`3D Printable Files/`](file:///Users/krishnanh/Projects/Theremidi/3D%20Printable%20Files):
+Files located in [`hardware/3D Printable Files/`](hardware/3D%20Printable%20Files/):
 
 | Part Name | File | Qty | Function / Description | Recommended Print Settings |
 | :--- | :--- | :---: | :--- | :--- |
-| **Enclosure Base** | [`base.stl`](file:///Users/krishnanh/Projects/Theremidi/3D%20Printable%20Files/base.stl) | **1x** | Prototype chassis housing the microcontroller, wiring, and breakout connections. | PLA / PETG, 0.2mm layer, 20% infill. |
-| **Enclosure Top Lid** | [`lid.stl`](file:///Users/krishnanh/Projects/Theremidi/3D%20Printable%20Files/lid.stl) | **1x** | Top faceplate containing cutouts for dual ultrasonic sensor transducers. | PLA / PETG, 0.2mm layer, 20% infill. |
-| **Structural Connector**| [`connector.stl`](file:///Users/krishnanh/Projects/Theremidi/3D%20Printable%20Files/connector.stl) | **2x** | Internal mounting brackets / clips for structural rigidity. | PLA / PETG, 0.2mm layer, 30% infill. |
+| **Enclosure Base** | [`base.stl`](hardware/3D%20Printable%20Files/base.stl) | **1x** | Prototype chassis housing the microcontroller, wiring, and breakout connections. | PLA / PETG, 0.2mm layer, 20% infill. |
+| **Enclosure Top Lid** | [`lid.stl`](hardware/3D%20Printable%20Files/lid.stl) | **1x** | Top faceplate containing cutouts for dual ultrasonic sensor transducers. | PLA / PETG, 0.2mm layer, 20% infill. |
+| **Structural Connector**| [`connector.stl`](hardware/3D%20Printable%20Files/connector.stl) | **2x** | Internal mounting brackets / clips for structural rigidity. | PLA / PETG, 0.2mm layer, 30% infill. |
 
 ---
 
@@ -33,7 +33,7 @@ Files located in [`3D Printable Files/`](file:///Users/krishnanh/Projects/Therem
 Theremidi supports two distinct prototype configurations:
 
 ### Configuration A: USB-MIDI Parameter Controller Mode
-*Firmware: [`software_version_w_smoothening_algo.ino`](file:///Users/krishnanh/Projects/Theremidi/software_version_w_smoothening_algo.ino)*
+*Firmware: [`firmware/usb_midi_controller/usb_midi_controller.ino`](firmware/usb_midi_controller/usb_midi_controller.ino)*
 
 | Component | Specification / Model | Qty | Notes |
 | :--- | :--- | :---: | :--- |
@@ -47,7 +47,7 @@ Theremidi supports two distinct prototype configurations:
 ---
 
 ### Configuration B: Standalone Digital Synthesizer Mode
-*Firmware: [`theremin_arduino_code.ino`](file:///Users/krishnanh/Projects/Theremidi/theremin_arduino_code.ino) + [`theremin_esp_code.ino`](file:///Users/krishnanh/Projects/Theremidi/theremin_esp_code.ino)*
+*Firmware: [`firmware/standalone_sensor_arduino/standalone_sensor_arduino.ino`](firmware/standalone_sensor_arduino/standalone_sensor_arduino.ino) + [`firmware/standalone_synth_esp32/standalone_synth_esp32.ino`](firmware/standalone_synth_esp32/standalone_synth_esp32.ino)*
 
 | Component | Specification / Model | Qty | Notes |
 | :--- | :--- | :---: | :--- |
