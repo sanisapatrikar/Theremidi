@@ -1,27 +1,31 @@
 # 🎛️ Theremidi
 
-### *Contactless MIDI Parameter Controller & Standalone Digital Instrument*
+### *Contactless MIDI Parameter Controller & Standalone Digital Instrument (DIY Prototype)*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Platform: ESP32](https://img.shields.io/badge/Platform-ESP32%20%7C%20Arduino-red.svg)](https://www.espressif.com/)
 [![Protocol: USB--MIDI](https://img.shields.io/badge/Protocol-USB--MIDI%20Class--Compliant-green.svg)](https://www.midi.org/)
 [![Hardware: 3D Printable](https://img.shields.io/badge/Hardware-3D%20Printable%20Enclosure-orange.svg)](3D%20Printable%20Files/)
 
-**Theremidi** bridges the gap between the expressive, physical intimacy of acoustic performance and the precision of modern digital music production. Inspired by Léon Theremin’s legendary 1920 invention, Theremidi replaces rigid knobs, faders, and touchscreens with **spatial gesture control**.
+> [!NOTE]
+> **Project Status: Open-Source DIY Prototype & Experimental Platform**  
+> Theremidi is an **experimental proof-of-concept and DIY prototype**, not a turnkey or studio-ready production product. It provides a functional, low-cost starting point for exploring contactless musical interaction. Musicians, sound designers, and creative coders are encouraged to build, experiment with, and evolve the hardware and DSP algorithms into custom studio instruments or live controllers as they see fit.
 
-By tracking hand proximity in real time using ultrasonic sensing and a custom low-latency smoothing algorithm, Theremidi delivers continuous, organic, tactile-free parameter manipulation for your DAW, synthesizers, and live stage setups.
+**Theremidi** explores the intersection between the expressive, physical gesture of acoustic performance and digital music production. Inspired by Léon Theremin’s legendary 1920 invention, Theremidi investigates replacing mechanical knobs and faders with **spatial gesture control**.
+
+By tracking hand proximity using ultrasonic sensing and an experimental smoothing algorithm, Theremidi offers an accessible DIY platform to experiment with organic, tactile-free parameter modulation in DAWs, software synths, or standalone audio experiments.
 
 ---
 
-## 🌟 Why Theremidi for Music Production & Live Performance?
+## 🌟 Expressive Exploration: The Touchless Concept
 
-Traditional MIDI controllers rely on mechanical faders, rotary knobs, or touch strips. While precise, they can feel static and restrict natural musical gestures. Theremidi introduces **three-dimensional physical expression**:
+Most MIDI controllers rely on mechanical faders, rotary knobs, or touch strips. Theremidi explores how **touchless spatial gestures** can inspire new creative workflows:
 
 - **🌊 Organic Filter Sweeps & Reverb Swells**: Shape synth cutoffs, resonance, and ambient wet/dry mixes naturally through air gestures.
-- **✨ Dynamic Wavetable & Granular Morphing**: Scrub through wavetable indexes or modulate granular scatter positions in plugins like Xfer Serum, Vital, Arturia Pigments, and Native Instruments Massive.
-- **🎸 Touchless Live Performance**: Wave a hand or instrument neck over the sensors to trigger dramatic breakdowns and drops without taking your hands off a keyboard, guitar, or drum machine.
-- **⚡ Jitter-Free Analog Feel**: Built-in real-time **Exponential Moving Average (EMA)** DSP eliminates ultrasonic sensor flutter, delivering buttery-smooth 14-bit-like continuous parameter sweeps without stepping.
-- **🔌 Plug-and-Play Class-Compliant USB-MIDI**: No third-party drivers or bridge software required. Recognised instantly across macOS, Windows, Linux, and iOS/iPadOS.
+- **✨ Dynamic Wavetable & Granular Morphing**: Scrub through wavetable indexes or modulate granular scatter positions in plugins like Serum, Vital, Arturia Pigments, and Massive.
+- **🎸 Touchless Performance Modulation**: Modulate effects while keeping your hands largely focused on playing an instrument, keyboard, or drum pad.
+- **⚡ Jitter Reduction via Smoothing Filter**: Implements real-time **Exponential Moving Average (EMA)** filtering to tame noisy ultrasonic sensor readings and deliver smoother parameter sweeps.
+- **🔌 Class-Compliant USB-MIDI (ESP32-S2/S3)**: Connects directly over USB without requiring custom drivers on macOS, Windows, Linux, or iPadOS.
 
 ---
 
@@ -30,8 +34,8 @@ Traditional MIDI controllers rely on mechanical faders, rotary knobs, or touch s
 ```mermaid
 graph TD
     subgraph "Spatial Gestures"
-        H1["Left Hand (Distance 1)"]
-        H2["Right Hand (Distance 2)"]
+        H1["Hand Distance 1"]
+        H2["Hand Distance 2"]
     end
 
     subgraph "Theremidi Hardware"
@@ -40,12 +44,12 @@ graph TD
         H1 --> US1
         H2 --> US2
         
-        MCU["ESP32 Microcontroller<br/>(EMA DSP Smoothing Filter)"]
+        MCU["ESP32 Microcontroller<br/>(EMA Smoothing Filter)"]
         US1 --> MCU
         US2 --> MCU
     end
 
-    subgraph "Mode 1: Studio USB-MIDI Controller"
+    subgraph "Mode 1: USB-MIDI Controller Prototype"
         MCU -- "USB-MIDI HID" --> DAW["DAW / Host (Ableton, Logic, FL Studio, Bitwig)"]
         DAW --> VST["Plugin Parameters (CC 16: Wavetable / CC 17: Cutoff)"]
     end
@@ -59,41 +63,41 @@ graph TD
 ### 1. 🎚️ Software Mode — Contactless USB-MIDI Controller
 *Firmware: [`software_version_w_smoothening_algo.ino`](software_version_w_smoothening_algo.ino)*
 
-The ESP32 registers as a native USB-MIDI Human Interface Device (HID). It translates your physical proximity into high-resolution MIDI Continuous Controller (CC) messages:
-- **CC 16**: Pre-mapped to **Wavetable Position / Reverb Depth** (5 cm – 40 cm range).
-- **CC 17**: Pre-mapped to **Filter Cutoff / FM Modulation Amount** (5 cm – 40 cm range).
-- **Custom Smoothing Engine**: Ultrasonic sensors can suffer from micro-reflections. Theremidi applies an inline low-pass EMA filter:
+The ESP32 registers as a native USB-MIDI Human Interface Device (HID). It translates physical proximity into MIDI Continuous Controller (CC) messages:
+- **CC 16**: Mapped to parameter 16 (e.g., Wavetable Position / Reverb Depth, 5 cm – 40 cm range).
+- **CC 17**: Mapped to parameter 17 (e.g., Filter Cutoff / FM Modulation Amount, 5 cm – 40 cm range).
+- **Smoothing Filter**: Ultrasonic sensors inherently produce noise and micro-reflections. Theremidi applies an inline low-pass EMA filter:
   $$S_t = \alpha \cdot X_t + (1 - \alpha) \cdot S_{t-1} \quad (\alpha = 0.1)$$
-  This guarantees studio-grade, glitch-free automation curves in any DAW.
+  This significantly reduces sensor chatter and produces smoother MIDI automation.
 
 ### 2. 🎻 Hardware Mode — Standalone Digital Instrument
 *Firmware: [`theremin_arduino_code.ino`](theremin_arduino_code.ino) + [`theremin_esp_code.ino`](theremin_esp_code.ino)*
 
-A self-contained digital instrument requiring zero computers or external software:
-- **Dual-MCU Pipeline**: An Arduino Uno captures high-speed sensor pulses and streams coordinate packets over UART to an ESP32.
+A standalone prototype requiring no computer:
+- **Dual-MCU Pipeline**: An Arduino Uno reads sensor pulses and streams coordinate packets over UART to an ESP32.
 - **Direct Digital Synthesis (DDS)**: The ESP32 synthesizes a real-time sine wave updated at ~100 kHz (10 µs cycle).
-- **Direct Analog Audio**: Pitch (100 Hz – 1000 Hz) and volume (0 – 255) are mapped and streamed directly to an audio output via the ESP32’s onboard 8-bit hardware DAC (GPIO 25).
+- **Direct Analog Audio**: Pitch (100 Hz – 1000 Hz) and volume (0 – 255) are converted into an analog waveform via the ESP32’s onboard 8-bit hardware DAC (GPIO 25).
 
 ---
 
 ## 📋 Bill of Materials (BOM)
 
-A complete procurement and fabrication breakdown is documented in [**BOM.md**](BOM.md).
+A complete procurement breakdown and 3D printing specs are documented in [**BOM.md**](BOM.md).
 
 ### 1. 3D Printed Enclosure Parts
-Designed specifically for desk stability and optimal sensor acoustics. STL files are available in [`3D Printable Files/`](3D%20Printable%20Files/):
+Designed as an experimental desktop enclosure. STL files are available in [`3D Printable Files/`](3D%20Printable%20Files/):
 
 | File | Quantity | Description | Print Recommendations |
 | :--- | :---: | :--- | :--- |
-| [`base.stl`](3D%20Printable%20Files/base.stl) | **1x** | Main chassis housing microcontroller, wiring, and ports | PLA / PETG, 0.2mm layer, 20% infill |
+| [`base.stl`](3D%20Printable%20Files/base.stl) | **1x** | Main chassis housing microcontroller and wiring | PLA / PETG, 0.2mm layer, 20% infill |
 | [`lid.stl`](3D%20Printable%20Files/lid.stl) | **1x** | Top cover plate with dual ultrasonic sensor cutouts | PLA / PETG, 0.2mm layer, 20% infill |
-| [`connector.stl`](3D%20Printable%20Files/connector.stl) | **2x** | Structural assembly mounting clips / internal brackets | PLA / PETG, 0.2mm layer, 30% infill |
+| [`connector.stl`](3D%20Printable%20Files/connector.stl) | **2x** | Internal structural mounting brackets | PLA / PETG, 0.2mm layer, 30% infill |
 
 ### 2. Fasteners & Mechanical Hardware
 | Item | Spec | Quantity | Usage |
 | :--- | :--- | :---: | :--- |
 | **Machine Screws** | **M3 × 5mm** (Socket or button head) | **4x** | Secures the top lid and internal bracket assemblies |
-| **Rubber Feet** | 8mm–10mm bumpons *(optional)* | 4x | Anti-slip desk pads for live studio stability |
+| **Rubber Feet** | 8mm–10mm bumpons *(optional)* | 4x | Non-slip feet for desktop stability |
 
 ### 3. Electronic Components
 | Item | Recommended Model | Qty | Target Configuration |
@@ -102,9 +106,9 @@ Designed specifically for desk stability and optimal sensor acoustics. STL files
 | **Microcontroller (Audio Synth Mode)**| **ESP32-WROOM-32** + **Arduino Uno** | 1x ea | Mode 2: ESP32 with hardware DAC (GPIO 25) |
 | **Sensors** | **HC-SR04P** (3.3V) or **HC-SR04** (5V) | 2x | Ultrasonic distance sensing for Pitch & Mod |
 | **Resistors (Voltage Divider)** | 1kΩ and 2kΩ | 2 pr | Needed only when connecting 5V HC-SR04 Echo to 3.3V ESP32 |
-| **Audio Output** | 3.5mm TRS stereo jack + 10µF capacitor | 1x | Mode 2: Analog audio output line-out |
-| **Audio Amp & Speaker** *(Optional)* | PAM8403 3W amp + 4Ω 3W speaker | 1x | Mode 2: Portable standalone sound |
-| **Cabling** | USB Data Cable (USB-C or Micro-USB) | 1x | Power and USB-MIDI data transmission |
+| **Audio Output** | 3.5mm TRS jack + 10µF capacitor | 1x | Mode 2: Analog line output |
+| **Audio Amp & Speaker** *(Optional)* | PAM8403 3W amp + 4Ω 3W speaker | 1x | Mode 2: Optional portable sound |
+| **Cabling** | USB Data Cable (USB-C or Micro-USB) | 1x | Power and USB-MIDI data |
 | **Wiring** | Breadboard or prototyping perfboard + jumpers | 1x | Internal wiring and assembly |
 
 ---
@@ -112,7 +116,7 @@ Designed specifically for desk stability and optimal sensor acoustics. STL files
 ## ⚡ Pinout & Wiring Diagrams
 
 ### Mode 1: ESP32 Native USB-MIDI Controller
-Connect the two HC-SR04 sensors directly to the ESP32:
+Connect the two HC-SR04 sensors to the ESP32:
 
 | Sensor | Sensor Pin | ESP32 GPIO | Description |
 | :--- | :--- | :--- | :--- |
@@ -141,47 +145,35 @@ Connect the two HC-SR04 sensors directly to the ESP32:
 
 ---
 
-## 🎚️ Quickstart: DAW Integration & MIDI Mapping
+## 🎚️ Quickstart: DAW Setup & MIDI Mapping
 
-Theremidi is class-compliant. Plug the USB cable into your computer, open your digital audio workstation, and start mapping:
+Once flashed, plug the ESP32 into your computer via USB:
 
-```
-[ Theremidi Device ] ---> (USB) ---> [ DAW MIDI Preferences: Enabled ]
-                                              |
-               +------------------------------+------------------------------+
-               |                                                             |
-      [ Ableton Live ]                                                [ Logic Pro ]
-1. Enable 'Track' & 'Remote' in MIDI prefs.                    1. Press Cmd + L to open Controller Assignments.
-2. Click 'MIDI' (top-right).                                   2. Click any plugin knob (e.g. Cutoff).
-3. Click any knob/fader in your VST/AU.                        3. Wave your hand over Theremidi to auto-map!
-4. Move your hand over Sensor 1 or 2 to map!
-```
-
-- **Ableton Live**: Go to **Settings > MIDI**, find `Theremidi / ESP32 MIDI`, and turn on **Track** and **Remote**. Hit `Cmd/Ctrl + M`, click any synth parameter, wave your hand over the sensor, and hit `Cmd/Ctrl + M` again.
-- **Logic Pro**: Press `Cmd + L` to open Controller Assignments. Click the parameter you want to automate in your software synth, wave your hand to capture the CC message, and close the window.
-- **FL Studio**: Right-click any plugin parameter, choose **Link to Controller**, move your hand over the sensor, and the link will automatically establish.
-- **Bitwig Studio / Studio One / Reaper**: Native MIDI Learn works immediately with standard CC 16 & CC 17 broadcasts.
+- **Ableton Live**: Go to **Settings > MIDI**, find the MIDI device, and turn on **Track** and **Remote**. Enter MIDI Map mode (`Cmd/Ctrl + M`), click a parameter, wave your hand over Sensor 1 or 2, and exit MIDI map mode.
+- **Logic Pro**: Press `Cmd + L` to open Controller Assignments. Click the desired parameter in your synth/plugin, wave your hand over the sensor to capture the incoming CC, and close the assignment window.
+- **FL Studio**: Right-click any plugin knob, select **Link to Controller**, move your hand over a sensor, and FL Studio will auto-bind the control.
+- **Bitwig Studio / Studio One / Reaper**: Native MIDI Learn functions detect CC 16 & CC 17 broadcasts directly.
 
 ---
 
-## 🚀 Future Roadmap & Audio Tech Innovations
+## 🚀 Future Roadmap & Maker Ideas
 
-We welcome contributions from musicians, embedded engineers, and creative technologists!
-- [ ] **Multi-Gesture Engine**: Recognize wave speed, hold gestures, and dual-hand vertical offsets to expand control to 12+ simultaneous MIDI parameters.
-- [ ] **High-Definition I2S DAC Support**: Add direct support for I2S audio chips (e.g., MAX98357A, PCM5102A) to output 24-bit / 96kHz studio-grade audio in standalone mode.
-- [ ] **Bluetooth Low Energy (BLE-MIDI)**: Enable battery-powered wireless control for untethered stage presence with iOS/macOS/Windows devices.
-- [ ] **Web-MIDI Calibration GUI**: Build a browser-based Web-MIDI app allowing users to adjust sensor min/max distances, smoothing factors, and custom CC output numbers without editing firmware.
-- [ ] **Eurorack / CV-Gate Expansion**: Interface with analog modular synths via 0–10V Control Voltage outputs.
+There is plenty of room for creative technologists and musicians to take this project further:
+- [ ] **Advanced Gesture Vocabulary**: Detect gesture speed, velocity, or dual-hand gestures to trigger additional CC parameters or note-on triggers.
+- [ ] **High-Fidelity Audio (I2S DAC)**: Incorporate I2S audio chips (e.g., MAX98357A or PCM5102A) for cleaner audio output in standalone mode.
+- [ ] **Wireless MIDI (BLE-MIDI)**: Implement Bluetooth Low Energy MIDI for wireless, battery-operated performance.
+- [ ] **Web-MIDI Calibration Tool**: Create a lightweight browser tool using the Web-MIDI API to calibrate distances, set response curves, and remap CC numbers.
+- [ ] **Alternative Sensors**: Experiment with Time-of-Flight (ToF / VL53L0X) optical sensors or infrared proximity sensors for tighter cones of detection.
 
 ---
 
-## 🤝 Contributing
+## 🤝 Contributing & Community
 
-Contributions make the open-source community thrive!
+Whether you're improving the smoothing filter, designing better 3D enclosures, or adapting it for a specific live rig, contributions and forks are welcome!
 1. Fork the Project (`https://github.com/sanisapatrikar/Theremidi`)
-2. Create your Feature Branch (`git checkout -b feature/ExpressionGesture`)
-3. Commit your Changes (`git commit -m 'Add velocity-sensitive gesture detection'`)
-4. Push to the Branch (`git push origin feature/ExpressionGesture`)
+2. Create your Feature Branch (`git checkout -b feature/NewGesture`)
+3. Commit your Changes (`git commit -m 'Add new gesture feature'`)
+4. Push to the Branch (`git push origin feature/NewGesture`)
 5. Open a Pull Request
 
 ---
