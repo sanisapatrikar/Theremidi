@@ -205,6 +205,12 @@ Whether you're improving the smoothing filter, designing better 3D enclosures, o
 5. Open a Pull Request
 
 ---
+## Working Video of ThereMIDI
+
+
+https://github.com/user-attachments/assets/814c2661-cefb-4b32-acef-8c2383be1999
+
+
 
 ## 📄 License
 
